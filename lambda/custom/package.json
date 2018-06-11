@@ -1,0 +1,15 @@
+{
+  "name": "parks-canada-fees",
+  "version": "0.1.0",
+  "description": "Parks Canada fees for services, facilities, products and rights and privileges as well as travel trade fees",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Thomas Gohard, Houssam Bedja",
+  "license": "MIT",
+  "dependencies": {
+    "ask-sdk-core": "^2.0.0",
+    "ask-sdk-model": "^1.0.0"
+  }
+}
