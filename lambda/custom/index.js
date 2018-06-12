@@ -24,7 +24,16 @@ const FeesQueryIntentHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'FeesQueryIntent';
   },
   handle(handlerInput) {
+    park = handlerInput.requestEnvelope.request.intent.slots['query'].value;
+
+    // query database to confirm 'query' is a valid park
+    // if false
+    //  raise error
+    //  exit handler
+
     const speechText = 'The fees for the selected national park are: ';
+
+    // query database to get list of fees
 
     return handlerInput.responseBuilder
       .speak(speechText)
