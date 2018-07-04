@@ -1,7 +1,7 @@
 {
   "deploy_settings": {
     "default": {
-      "skill_id": "",
+      "skill_id": "amzn1.ask.skill.c01cfbcd-f32e-431c-83ff-c5ea4814b147",
       "was_cloned": false,
       "merge": {
         "manifest": {
@@ -13,7 +13,8 @@
             }
           }
         }
-      }
+      },
+      "in_skill_products": []
     }
   }
 }
