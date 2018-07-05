@@ -2,6 +2,8 @@
 /* eslint-disable  no-console */
 
 const Alexa = require('ask-sdk-core');
+const AWS = require('aws-sdk');
+const docClient = new AWS.DynamoDB.DocumentClient({region: 'us-east-1'});
 
 const LaunchRequestHandler = {
   canHandle(handlerInput) {
@@ -39,16 +41,21 @@ const FeesQueryIntentHandler = {
     //  raise error
     //  exit handler
     // listOfFees = data[0]['Fees list']
-
-    const speechText = 'The fees for the selected national park are: ';
+    var queryResults = getListOfFees(query);
+    if (queryResults.length) {
+      var speechText = 'The fees for the selected national park are: ';
+    } else {
+      response.speak('No fees for national park ' + query);
+    }
 
     // for each fee in list of fees
     //  speechText += fee
 
-    return handlerInput.responseBuilder
+    /*return handlerInput.responseBuilder
       .speak(speechText)
       .withSimpleCard('Parks Canada fees', speechText)
-      .getResponse();
+      .getResponse();*/
+    return response.getResponse();
   },
 };
 
@@ -107,6 +114,33 @@ const ErrorHandler = {
       .reprompt('Sorry, I can\'t understand the command. Please say again.')
       .getResponse();
   },
+};
+
+function scanDb(params) {
+  return docClient.scan(params).promise();
+}
+
+async function getListOfFees(query) {
+  var feesList = [];
+  var params = {
+    TableName: 'parks-canada-fees-en',
+    FilterExpression: 'contains (:pn, :q)',
+    ExpressionAttributeNames: {
+      ':pn': 'Park name',
+      ':fl': 'Fees list'
+    }
+    ExpressionAttributeValues: {
+      ':q': query
+    },
+    ProjectionExpression: ':fl'
+  };
+
+  var data = await scanDb(params);
+  if (data['Count'] >= 1) {
+    feesList = data['Items'][0]['Fees list'];
+  }
+  
+  return feesList;
 };
 
 const skillBuilder = Alexa.SkillBuilders.custom();
