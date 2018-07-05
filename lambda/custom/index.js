@@ -24,7 +24,15 @@ const FeesQueryIntentHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'FeesQueryIntent';
   },
   handle(handlerInput) {
-    var park = handlerInput.requestEnvelope.request.intent.slots['query'].value;
+    var response = handlerInput.responseBuilder;
+    var query = handlerInput.requestEnvelope.request.intent.slots['query'].value;
+
+    if(!query) {
+      console.log('Error: No query value.');
+      return response.speak('')
+        .withSimpleCard('Parks Canada fees', '')
+        .getResponse();
+    }
 
     // query database to get list of fees for park in 'query' (assume only one park match is found)
     // if error
