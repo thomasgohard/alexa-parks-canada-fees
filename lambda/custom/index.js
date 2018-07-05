@@ -24,7 +24,7 @@ const FeesQueryIntentHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'FeesQueryIntent';
   },
   handle(handlerInput) {
-    park = handlerInput.requestEnvelope.request.intent.slots['query'].value;
+    var park = handlerInput.requestEnvelope.request.intent.slots['query'].value;
 
     // query database to get list of fees for park in 'query' (assume only one park match is found)
     // if error
@@ -106,7 +106,7 @@ const skillBuilder = Alexa.SkillBuilders.custom();
 exports.handler = skillBuilder
   .addRequestHandlers(
     LaunchRequestHandler,
-    HelloWorldIntentHandler,
+    FeesQueryIntentHandler,
     HelpIntentHandler,
     CancelAndStopIntentHandler,
     SessionEndedRequestHandler
