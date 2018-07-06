@@ -27,18 +27,30 @@ const FeesQueryIntentHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'FeesQueryIntent';
   },
   async handle(handlerInput) {
+    var speechText = '';
     const parkName = handlerInput.requestEnvelope.request.intent.slots['query'].value;
     const feeTable = await getFee(parkName.toLowerCase());
-    var speechText = 'The fees for ' + parkName +' are: ';
-    for (var i in feeTable) {
-      speechText += feeTable[i]['Fee'] + ' for a ' + feeTable[i]['Fee class'] + ' ' + feeTable[i]['Fee description'] + ' ' + feeTable[i]['Fee type'] + '. '; 
-    }
-    
-
-    return handlerInput.responseBuilder
+    console.log('feeTable: ' + feeTable);
+    if (feeTable == 'unknown') {
+      speechText = 'I have not found the Park you\'re looking for. Please say it again.';
+      
+      return handlerInput.responseBuilder
+      .speak(speechText)
+      .withSimpleCard('Parks Canada fees', speechText)
+      .withShouldEndSession(false)
+      .getResponse();
+      
+    } else {
+      speechText = 'The fees for ' + parkName +' are: ';
+      for (var i in feeTable) {
+        speechText += feeTable[i]['Fee'] + ' for a ' + feeTable[i]['Fee class'] + ' ' + feeTable[i]['Fee description'] + ' ' + feeTable[i]['Fee type'] + '. '; 
+      }
+      
+      return handlerInput.responseBuilder
       .speak(speechText)
       .withSimpleCard('Parks Canada fees', speechText)
       .getResponse();
+    }
   },
 };
 
