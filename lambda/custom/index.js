@@ -2,6 +2,9 @@
 /* eslint-disable  no-console */
 
 const Alexa = require('ask-sdk-core');
+const AWS = require('aws-sdk');
+const docClient = new AWS.DynamoDB.DocumentClient({region: 'us-east-1'});
+const util = require('util');
 
 const LaunchRequestHandler = {
   canHandle(handlerInput) {
@@ -23,8 +26,14 @@ const FeesQueryIntentHandler = {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
       && handlerInput.requestEnvelope.request.intent.name === 'FeesQueryIntent';
   },
-  handle(handlerInput) {
-    const speechText = 'The fees for the selected national park are: ';
+  async handle(handlerInput) {
+    const parkName = handlerInput.requestEnvelope.request.intent.slots['query'].value;
+    const feeTable = await getFee(parkName.toLowerCase());
+    var speechText = 'The fees for ' + parkName +' are: ';
+    for (var i in feeTable) {
+      speechText += feeTable[i]['Fee'] + ' for a ' + feeTable[i]['Fee class'] + ' ' + feeTable[i]['Fee description'] + ' ' + feeTable[i]['Fee type'] + '. '; 
+    }
+    
 
     return handlerInput.responseBuilder
       .speak(speechText)
@@ -90,12 +99,46 @@ const ErrorHandler = {
   },
 };
 
+function scanDb(params) {
+  return docClient.scan(params).promise();
+}
+
+async function getFee(parkName) {
+
+  var fee = 'unknown';
+
+  console.log("Park name: " + parkName);
+
+  var params = {
+    TableName: 'parks-canada-fees-en',
+    FilterExpression: 'contains (parknamekey, :s)',
+    ExpressionAttributeNames:{
+        //'#parkName': 'Park name',
+        '#feesList': 'Fees list'
+    },
+    ExpressionAttributeValues: {
+      ':s': parkName
+    },
+    ProjectionExpression: '#feesList'
+  };
+
+  var data = await scanDb(params);
+  if (data['Count'] >= 1) {
+    fee = data['Items'][0]['Fees list'];//[0]['Fee'];
+  }
+
+  console.log('Fee: ' + fee);
+  
+  return fee;  
+};
+
+
 const skillBuilder = Alexa.SkillBuilders.custom();
 
 exports.handler = skillBuilder
   .addRequestHandlers(
     LaunchRequestHandler,
-    HelloWorldIntentHandler,
+    FeesQueryIntentHandler,
     HelpIntentHandler,
     CancelAndStopIntentHandler,
     SessionEndedRequestHandler
