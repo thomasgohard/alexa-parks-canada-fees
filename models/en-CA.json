@@ -1,43 +1,80 @@
 {
   "interactionModel": {
-    "languageModel": {
-      "invocationName": "parks canada fees",
-      "types": [
-
-      ],
-      "intents": [
-        {
-          "name": "AMAZON.CancelIntent",
-          "samples": [
-
-          ]
-        },
-        {
-          "name": "AMAZON.HelpIntent",
-          "samples": [
-
-          ]
-        },
-        {
-          "name": "AMAZON.StopIntent",
-          "samples": [
-
-          ]
-        },
-        {
-          "name": "FeesQueryIntent",
-          "slots": [
-            {
-              "name": "query",
-              "type": "AMAZON.SearchQuery"
-            }
+      "languageModel": {
+          "invocationName": "parks canada fees",
+          "intents": [
+              {
+                  "name": "AMAZON.CancelIntent",
+                  "samples": []
+              },
+              {
+                  "name": "AMAZON.HelpIntent",
+                  "samples": []
+              },
+              {
+                  "name": "AMAZON.StopIntent",
+                  "samples": []
+              },
+              {
+                  "name": "FeesQueryIntent",
+                  "slots": [
+                      {
+                          "name": "query",
+                          "type": "AMAZON.SearchQuery"
+                      },
+                      {
+                          "name": "period",
+                          "type": "AMAZON.SearchQuery",
+                          "samples": [
+                              "{period}"
+                          ]
+                      }
+                  ],
+                  "samples": [
+                      "for {query}",
+                      "fees for {query}"
+                  ]
+              }
           ],
-          "samples": [
-            "for {query}",
-            "fees for {query}"
+          "types": []
+      },
+      "dialog": {
+          "intents": [
+              {
+                  "name": "FeesQueryIntent",
+                  "confirmationRequired": false,
+                  "prompts": {},
+                  "slots": [
+                      {
+                          "name": "query",
+                          "type": "AMAZON.SearchQuery",
+                          "confirmationRequired": false,
+                          "elicitationRequired": false,
+                          "prompts": {}
+                      },
+                      {
+                          "name": "period",
+                          "type": "AMAZON.SearchQuery",
+                          "confirmationRequired": false,
+                          "elicitationRequired": true,
+                          "prompts": {
+                              "elicitation": "Elicit.Slot.422795673855.53408463111"
+                          }
+                      }
+                  ]
+              }
           ]
-        }
+      },
+      "prompts": [
+          {
+              "id": "Elicit.Slot.422795673855.53408463111",
+              "variations": [
+                  {
+                      "type": "PlainText",
+                      "value": "Are you looking for a daily or weekly fee?"
+                  }
+              ]
+          }
       ]
-    }
   }
 }
