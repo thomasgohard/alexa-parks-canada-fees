@@ -1,0 +1,41 @@
+{
+  "deploy_settings": {
+    "default": {
+      "skill_id": "amzn1.ask.skill.6358592e-267d-4870-98d6-2e3c986904ff",
+      "was_cloned": false,
+      "resources": {
+        "manifest": {
+          "eTag": "8d3f596c4826e1cc3393a674dab00743"
+        },
+        "interactionModel": {
+          "en-CA": {
+            "eTag": "46282c2390d6f97cf313ab7df9e8681a"
+          }
+        },
+        "lambda": [
+          {
+            "arn": "arn:aws:lambda:us-east-1:590012697664:function:ask-custom-Parks-Canada-fees-default",
+            "awsRegion": "us-east-1",
+            "functionName": "ask-custom-Parks-Canada-fees-default",
+            "alexaUsage": [
+              "custom/default"
+            ],
+            "revisionId": "ceef482e-10b8-4dc7-b30d-304c6b62e627"
+          }
+        ]
+      },
+      "merge": {
+        "manifest": {
+          "apis": {
+            "custom": {
+              "endpoint": {
+                "uri": "arn:aws:lambda:us-east-1:590012697664:function:ask-custom-Parks-Canada-fees-default"
+              }
+            }
+          }
+        }
+      },
+      "in_skill_products": []
+    }
+  }
+}
